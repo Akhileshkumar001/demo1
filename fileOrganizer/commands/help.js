@@ -6,12 +6,12 @@
           `)
   }
 
-  function abc(){
-        console.log("KSFJB");
-  }
+  //function abc(){
+       // console.log("KSFJB");
+ // }
 
   module.exports={
     help:help,
-    ghoda:abc
+    //ghoda:abc
 
   }
