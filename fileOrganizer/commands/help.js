@@ -11,7 +11,7 @@
  // }
 
   module.exports={
-    help:help,
+    help:help
     //ghoda:abc
 
   }

@@ -27,10 +27,10 @@ function organize(srcPath){
     let allFile=fs.readdirSync(srcPath);//Reads the contents of the directory->basically reads the name of files present in the directory
     //console.log(allFile);
     for(let i=0;i<allFile.length;i++){
-       // let ext=allFile[i].split(".")[1];
+        let ext=allFile[i].split(".")[1];
         // or
-        //let ext=path.extname(allFiles[i])
-       // console.log(ext);
+       // let ext=path.extname(allFiles[i])
+        //console.log(ext);
        // extname returns the extension of the file
        let fullPathFile = path.join(srcPath,allFile[i]);
       // console.log(fullPathFile);
@@ -41,15 +41,49 @@ function organize(srcPath){
       if(isFile){
         // 1.1 get ext name
         let ext=path.extname(allFile[i]).split(".")[1];
-       // console.log(ext);
+       //  console.log(ext);
        //1.2 get folder name from extension
-       let folderName=getfolderNmae(ext);// archives
+       let folderName=getFolderName(ext);// archives
+       console.log(folderName);
        // 1.3 copy from src folder (srcPath) and paste in dest folder (folder_name e.g. document,media etc)
-       copyFileToDest(srcPath,fullPathFile,folderName)
+    //              copy        kya copy kre   paste 
+        copyFileToDest(srcPath,fullPathFile,folderName);
     
         }
 
     }
 }
-let srcPath="/Users/91834/Desktop/gitDemo/fileOrganizer/downloads"
-organize(srcPath);
+function getFolderName(ext){
+    for(let key in folder){
+     //   console.log(key);
+        for(let i=0;i<folder[key].length;i++){
+            if(folder[key][i]==ext){
+               return key;
+           }
+        }
+    }
+    return "miscellaneous"
+}
+function copyFileToDest(srcPath,fullPathFile,folderName){
+    // 1. folderName ka path banna hai
+    let destFolderPath=path.join(srcPath,"organize_files",folderName);//..../download/organized_file/archive
+    //2 check folder if exist ,if it does not ,then make folder
+     if(!fs.existsSync(destFolderPath)){
+        fs.mkdirSync(destFolderPath);
+    }
+    //3. copy file from src folder to dest folder
+    
+    // return the last portion of a path
+
+    let fileName=path.basename(fullPathFile);
+    let destFileName=path.join(destFolderPath,fileName);
+     fs.copyFileSync(fullPathFile,destFileName);
+
+}
+//let srcPath="/Users/91834/Desktop/gitDemo/fileOrganizer/downloads"
+//organize(srcPath);
+
+module.exports={
+    organize:organize
+
+  }
