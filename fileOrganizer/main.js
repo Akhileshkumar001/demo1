@@ -1,13 +1,14 @@
 let fs=require("./commands/help");
 let orgfun=require("./commands/organize");
+let treefun=require("./commands/tree");
 //console.log(fs.hathi());
 let inputArr=process.argv.slice(2);
 let command=inputArr[0];
 let path=inputArr[1];
 switch(command){
     case"tree":
-        //fs.hathi();
-        console.log("tree command secsussfull excuted"+path);
+        treefun.tree(path);
+       // console.log("tree command secsussfull excuted"+path);
         break;
     case"organize":
         orgfun.organize(path);
