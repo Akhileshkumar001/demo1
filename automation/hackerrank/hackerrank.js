@@ -1,6 +1,6 @@
 const puppeteer=require("puppeteer");
-let email="akhilesh_kumar.scsebtech@galgotiasuniversity.edu.in";
-let password="Akhilesh@12345";
+let email="";
+let password="";
 let cTab;
 let browseOpenPromisses=puppeteer.launch({
     headless:false,
