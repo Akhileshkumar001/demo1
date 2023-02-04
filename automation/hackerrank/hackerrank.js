@@ -1,6 +1,6 @@
 const puppeteer=require("puppeteer");
-let email="";
-let password="";
+let email="akhilesh_kumar.scsebtech@galgotiasuniversity.edu.in";
+let password="Akhilesh@12345";
 let cTab;
 let browseOpenPromisses=puppeteer.launch({
     headless:false,
@@ -42,6 +42,27 @@ browseOpenPromisses  //full fill
         let AlgortihamTabWillBeOpenedPromise=WaitandClick("div[data-automation='algorithms']");
         return AlgortihamTabWillBeOpenedPromise;
      })
+     .then(function(){
+        console.log("alogritham tab opened");
+        let AllQuestionPromisses=cTab.waitForSelector("a[data-analytics='ChallengeListChallengeName']");
+            return AllQuestionPromisses;
+     })
+     .then(function(){
+        function getAllQuestLink(){
+            let allElemntArr=document.querySelectorAll("a[data-analytics='ChallengeListChallengeName']");
+            let LinkArr=[];
+            for(let i=0;i<allElemntArr.length;i++){
+                LinkArr.push(allElemntArr[i].getAttribute("href"));
+            }
+            return LinkArr;
+        }
+        let linksPromisses=cTab.evaluate(getAllQuestLink);
+        return linksPromisses;
+     })
+     .then(function(LinkArr){
+        console.log("link to all ques received");
+        console.log(LinkArr);
+     })
      .catch(function(err){
         console.log("error");
      })
@@ -56,7 +77,10 @@ browseOpenPromisses  //full fill
         })
         .then(function(){
             console.log("algo btn is clicked");
-
+        })
+        .then(function(){
+            console.log("succses full");
+            resolve();
         })
         .catch(function(err){
             console.log("err");
@@ -64,3 +88,4 @@ browseOpenPromisses  //full fill
     });
     return myPromise;        
 }
+
