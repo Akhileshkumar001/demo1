@@ -1,7 +1,8 @@
+//Puppeteer is a Node.js library which provides a high-level API to control Chrome/Chromium over the DevTools Protocol
 const puppeteer=require("puppeteer");
 let {answer}=require("./code");
-let email="";
-let password="";
+let email="akhilesh_kumar.scsebtech@galgotiasuniversity.edu.in";
+let password="Akhilesh@12345";
 let cTab;
 let browseOpenPromisses=puppeteer.launch({
     headless:false,
@@ -40,7 +41,7 @@ browseOpenPromisses  //full fill
      })
      .then(function(){
         console.log("loging in to hackerrank sucessesfull");
-        let AlgortihamTabWillBeOpenedPromise=WaitandClick("div[data-automation='algorithms']");
+        let AlgortihamTabWillBeOpenedPromise=waitAndClick("div[data-automation='algorithms']");
         return AlgortihamTabWillBeOpenedPromise;
      })
      .then(function(){
@@ -65,6 +66,11 @@ browseOpenPromisses  //full fill
         console.log(LinkArr);
                                                 // link to the question, idx of the linkArr
         let questionWILLBESolvedPromise=questionSolver(LinkArr[0],0);
+        for(let i=0;i<LinkArr.length;i++){
+            questionWILLBESolvedPromise=questionWILLBESolvedPromise.then(function(){
+                return questionSolver(LinkArr[i],i);            
+            })
+        }
         return questionWILLBESolvedPromise;
      })
      .then(function(){
@@ -75,7 +81,7 @@ browseOpenPromisses  //full fill
      })
 
 
-      function WaitandClick(selector){
+      function waitAndClick(selector){
         let myPromise=new Promise(function(resolve,err){
             let WaitforSelectorPomises=cTab.waitForSelector(selector);
         WaitforSelectorPomises   
@@ -107,11 +113,12 @@ function questionSolver(url,idx){
         .then(function(){
             console.log("question opened");
             //salect custom input mark
-            let WaitForcheckBoxClickPromise=WaitandClick(".checkbox-input");
-            return checkBoxClickPromise;
+            let WaitForcheckBoxClickPromise=waitAndClick(".checkbox-input");
+            return WaitForcheckBoxClickPromise;
             //resolve();
         })
         .then(function(){
+            //Select the box where code will be typed
             let WaitForTextBoxPromise=cTab.waitForSelector(".custominput");
             return WaitForTextBoxPromise;
         })
@@ -121,7 +128,7 @@ function questionSolver(url,idx){
         })
         .then(function(){
             // control key is promise
-            let controlPressedPromisses=cTab.keyboard.press("Control");
+            let controlPressedPromisses=cTab.keyboard.down("Control");
             return controlPressedPromisses;
         })
         .then(function(){
@@ -130,26 +137,36 @@ function questionSolver(url,idx){
         })
         .then(function(){
             let XKeyPresssPromise=cTab.keyboard.press("x");
+            return XKeyPresssPromise;
+        })
+        .then(function(){
+            let controlUnPressPromise=cTab.keyboard.up("Control");
+            return controlUnPressPromise;
         })
         .then(function(){
             let CursorOnTheEditorPromis=cTab.click(".monaco-editor.no-user-select.vs");
             return CursorOnTheEditorPromis;
         })
         .then(function(){
-            let akeyPressPromise=cTab.press("a");
+            // control key is promise
+            let controlPressedPromisses=cTab.keyboard.down("Control");
+            return controlPressedPromisses;
+        })
+        .then(function(){
+            let akeyPressPromise=cTab.keyboard.press("A",{delay:100});
             return akeyPressPromise;
         })
         .then(function(){
-            let vkeyPressPromise=cTab.press("v");
+            let vkeyPressPromise=cTab.keyboard.press("V",{delay:100});
             return vkeyPressPromise;
-        })
-        .then(function(){
-            let SubmitButtonClickedPromise=cTab.click(".hr-monaco-submit");
-            return SubmitButtonClickedPromise;
         })
         .then(function(){
             let controlUnPressPromise=cTab.keyboard.up("Control");
             return controlUnPressPromise;
+        })
+        .then(function(){
+            let SubmitButtonClickedPromise=cTab.click(".hr-monaco-submit");
+            return SubmitButtonClickedPromise;
         })
         .then(function(){
             console.log("code submitted sucessfully");
