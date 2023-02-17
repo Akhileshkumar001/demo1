@@ -1,4 +1,5 @@
 const fs=require("fs");
+
 console.log("before");
 //cb function work
 //fs.readFile("f1.txt",cb);

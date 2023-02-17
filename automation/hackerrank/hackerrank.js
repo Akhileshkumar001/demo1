@@ -1,8 +1,8 @@
 //Puppeteer is a Node.js library which provides a high-level API to control Chrome/Chromium over the DevTools Protocol
 const puppeteer=require("puppeteer");
 let {answer}=require("./code");
-let email="";
-let password="";
+let email="akhilesh_kumar.scsebtech@galgotiasuniversity.edu.in";
+let password="Akhilesh@12345";
 let cTab;
 let browseOpenPromisses=puppeteer.launch({
     headless:false,
@@ -67,7 +67,7 @@ browseOpenPromisses  //full fill
                                                 // link to the question, idx of the linkArr
         let questionWILLBESolvedPromise=questionSolver(LinkArr[0],0);
         for(let i=0;i<LinkArr.length;i++){
-            questionWILLBESolvedPromise=questionWILLBESolvedPromise.then(function(){
+           questionWILLBESolvedPromise=questionWILLBESolvedPromise.then(function(){
                 return questionSolver(LinkArr[i],i);            
             })
         }
