@@ -10,6 +10,7 @@ let ticketArr=[];
 let toolticketColor=document.querySelectorAll(".color");
 let removebtn=document.querySelector(".remove-btn");
 
+
 //to open close modal container
 let isModalPresent= false;
 
@@ -62,8 +63,8 @@ function createTicket(ticketColor , data ,ticketId){
     <div class="ticket-text">${data}</div>
         `;
         mainCont.appendChild(ticketCont);
-
-
+        handaleRemoval(ticketCont,id);
+        handleColor(ticketCont,id);
     if(!ticketId){
         ticketArr.push(
            {
@@ -135,6 +136,38 @@ removebtn.addEventListener("click",function(){
     }
     removeBtnActive=!removeBtnActive;
 })
+function handaleRemoval(ticket,id){
+    ticket.addEventListener("click",function(){
+        if(!removeBtnActive) return;
+        let Idx=getTicketIdx(id);
+        let deleteTicket=ticketArr.splice(Idx,1);
+        let ticketsArr=JSON.stringify(ticketArr);
+        localStorage.setItem("tickets",ticketsArr);
+
+        ticket.remove();
+    })
+}
+function getTicketIdx(id){
+    let ticketIDX=ticketArr.findIndex(function(ticketObj){
+        return ticketObj.ticketArr==id;
+    })
+    return ticketIDX;
+}
+function handleColor(ticket,id){
+    let ticketcolorStrip=ticket.querySelector(".ticket-color")
+    ticketcolorStrip.addEventListener("click",function(){
+        let  currTicketColor=ticketcolorStrip.classList[1];
+        let currTicketColorIdx=currTicketColor.indexOf(currTicketColor);
+        let newTicketColorIdx=currTicketColorIdx+1;
+        newTicketColorIdx=newTicketColorIdx%colors.length;
+        let newTicketColor=colors[newTicketColorIdx];
+        ticketcolorStrip.classList.remove(currTicketColor);
+        ticketcolorStrip.classList.add(newTicketColor);
+        let ticketIdx=getTicketIdx(id);
+        ticketArr[ticketIdx].ticketColor=newTicketColor;
+        localStorage.setItem("tickets",JASON.stringify(ticketArr));
+    })
+}
 
 
 
