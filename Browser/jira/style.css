@@ -97,18 +97,24 @@ textarea{
     height: 12rem;
     width: 15rem;
     background-color: #f1f2f6;
+    
 }
 .ticket-id{
     height: 1rem;
-    background-color: black;
+    background-color: rgb(220, 147, 147);
 }
 .ticket-color{
     height: 2rem;
     /*background-color: burlywood;*/
+
 }
 .ticket-text{
     height: calc(100% - 1rem - 2rem);
     font-size: 1.5rem;
     outline: none;
     overflow-wrap: break-word;
+}
+.main-containt{
+    display: flex;
+    margin: 2rem;
 }
