@@ -70,6 +70,7 @@ function createTicket(ticketColor , data ,ticketId){
         handaleRemoval(ticketCont,id);
         handleColor(ticketCont,id);
         handalLock(ticketCont,id);
+        //if ticket is being created for the first time , then ticketId would be undefined
     if(!ticketId){
         ticketArr.push(
            {
@@ -78,15 +79,15 @@ function createTicket(ticketColor , data ,ticketId){
                 ticketId:id
             }
         );
-        localStorage.setItem("tickets",JSON.stringify(ticketArr)); //,JSON.stringify(ticketArr) it is use for convert object in to string
+        localStorage.setItem("tickets",JSON.stringify(ticketArr)); //,JSON.stringify() it is use for convert object in to string
     }
 } 
 // get all tickets from local storage   
 if(localStorage.getItem("tickets")){
-    ticketArr=JSON.parse(localStorage.getItem("tickets"));//JSON.parse(localStorage.getItem("tickets")); IT IS USE FOR convert string into object
+    ticketArr=JSON.parse(localStorage.getItem("tickets"));//JSON.parse(localStorage.getItem()); IT IS USE FOR convert string into object
     ticketArr.forEach(function(ticketObj){
         createTicket(ticketObj.ticketColor,ticketObj.data,ticketObj.ticketId);
-    });
+    })
 }
 //console.log(uid());/
 // filter on the besis of ticket color
@@ -95,9 +96,9 @@ for(let i=0;i<toolticketColor.length;i++){
        let curentcolortool=toolticketColor[i].classList[0];
 
        let filterTicket=ticketArr.filter(function(ticketObj){
-        return curentcolortool == ticketObj.ticketColor;
-        //if(curentcolortool == ticketObj.ticketColor);
-        //return ticketObj ;
+       // return curentcolortool == ticketObj.ticketColor;
+        if(curentcolortool == ticketObj.ticketColor) return ticketObj ;
+        
        });
        // remove all the tickets
        let allticket=document.querySelectorAll(".ticket-cont");
@@ -149,10 +150,10 @@ function handaleRemoval(ticket,id){
          //local storage remove 
         //->get idx of the ticket to be deleted
         let Idx=getTicketIdx(id);
-        let deleteTicket=ticketArr.splice(Idx,1);
+        ticketArr.splice(Idx,1);
         let ticketsArr=JSON.stringify(ticketArr);
         //removed from browser storage and set updated arr
-        localStorage.setItem("tickets",ticketsArr);
+        localStorage.setItem("tickets",JSON.stringify(ticketsArr));
         //frontend remove
         ticket.remove();
     });
@@ -160,7 +161,7 @@ function handaleRemoval(ticket,id){
 //returns index of the ticket inside Local Storage's array
 function getTicketIdx(id){
     let ticketIDX=ticketArr.findIndex(function(ticketObj){
-        return ticketObj.ticketArr==id;
+        return ticketObj.ticketId==id;
     });
     return ticketIDX;
 }
@@ -172,14 +173,14 @@ function handleColor(ticket,id){
         //["lightpink", "lightgreen", "lightblue", "black"];
         let currTicketColorIdx =colors.indexOf(currTicketColor);
         let newTicketColorIdx=currTicketColorIdx+1;
-        newTicketColorIdx=newTicketColorIdx%colors.length;
+        newTicketColorIdx=newTicketColorIdx % colors.length;
         let newTicketColor=colors[newTicketColorIdx];
         ticketcolorStrip.classList.remove(currTicketColor);
         ticketcolorStrip.classList.add(newTicketColor);
         //local storage update 
         let ticketIdx=getTicketIdx(id);
         ticketArr[ticketIdx].ticketColor = newTicketColor;
-        localStorage.setItem("tickets",JASON.stringify(ticketArr));
+        localStorage.setItem("tickets",JSON.stringify(ticketArr));
     });
 }
 
@@ -204,6 +205,6 @@ function handalLock(ticket,id){
 
             }
             ticketArr[ticketIDX].data=ticketTaskARea.innerText;
-            localStorage.setItem("ticketItem",JASON.stringify(ticketArr));
+            localStorage.setItem("ticketItem",JSON.stringify(ticketArr));
         });
 }
