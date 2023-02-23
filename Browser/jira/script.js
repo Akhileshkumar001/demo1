@@ -9,6 +9,8 @@ let mainCont=document.querySelector(".main-containt");
 let ticketArr=[];
 let toolticketColor=document.querySelectorAll(".color");
 let removebtn=document.querySelector(".remove-btn");
+let lockClass = "fa-lock";
+let unlockClass = "fa-lock-open";
 
 
 //to open close modal container
@@ -48,7 +50,7 @@ modlCont.addEventListener("keydown",function (e) {
         textArea.value ="";
         allPriorityColor.forEach(function(elmentColor){
             elmentColor.classList.remove("active");
-        })
+        });
     }
 });
 
@@ -61,10 +63,13 @@ function createTicket(ticketColor , data ,ticketId){
     <div class="ticket-color ${ticketColor}"></div>     
     <div class="ticket-id"> ${id}</div>
     <div class="ticket-text">${data}</div>
+    <div class="ticket-lock">
+          <i class="fa-solid fa-lock"></i>
         `;
         mainCont.appendChild(ticketCont);
         handaleRemoval(ticketCont,id);
         handleColor(ticketCont,id);
+        handalLock(ticketCont,id);
     if(!ticketId){
         ticketArr.push(
            {
@@ -81,7 +86,7 @@ if(localStorage.getItem("tickets")){
     ticketArr=JSON.parse(localStorage.getItem("tickets"));//JSON.parse(localStorage.getItem("tickets")); IT IS USE FOR convert string into object
     ticketArr.forEach(function(ticketObj){
         createTicket(ticketObj.ticketColor,ticketObj.data,ticketObj.ticketId);
-    })
+    });
 }
 //console.log(uid());/
 // filter on the besis of ticket color
@@ -106,9 +111,9 @@ for(let i=0;i<toolticketColor.length;i++){
             ticketObj.data,
             ticketObj.ticketId
             );
-       })
+       });
        
-    })
+    });
     // to display all the tickets of all colors on duble clicking
     toolticketColor[i].addEventListener("dblclick",function(){
         // remove all the  color specific tickets
@@ -125,8 +130,9 @@ for(let i=0;i<toolticketColor.length;i++){
             );
        });
 
-    })
+    });
 }
+//on clicking removeBtn, make color red and amke color white in clicking again
 let removeBtnActive=false;
 removebtn.addEventListener("click",function(){
     if(removeBtnActive){
@@ -135,39 +141,69 @@ removebtn.addEventListener("click",function(){
         removebtn.style.color = "red";
     }
     removeBtnActive=!removeBtnActive;
-})
+});
+// removes ticket from local storage and UI
 function handaleRemoval(ticket,id){
     ticket.addEventListener("click",function(){
         if(!removeBtnActive) return;
+         //local storage remove 
+        //->get idx of the ticket to be deleted
         let Idx=getTicketIdx(id);
         let deleteTicket=ticketArr.splice(Idx,1);
         let ticketsArr=JSON.stringify(ticketArr);
+        //removed from browser storage and set updated arr
         localStorage.setItem("tickets",ticketsArr);
-
+        //frontend remove
         ticket.remove();
-    })
+    });
 }
+//returns index of the ticket inside Local Storage's array
 function getTicketIdx(id){
     let ticketIDX=ticketArr.findIndex(function(ticketObj){
         return ticketObj.ticketArr==id;
-    })
+    });
     return ticketIDX;
 }
+//change priority color of the tickets
 function handleColor(ticket,id){
     let ticketcolorStrip=ticket.querySelector(".ticket-color")
     ticketcolorStrip.addEventListener("click",function(){
         let  currTicketColor=ticketcolorStrip.classList[1];
-        let currTicketColorIdx=currTicketColor.indexOf(currTicketColor);
+        //["lightpink", "lightgreen", "lightblue", "black"];
+        let currTicketColorIdx =colors.indexOf(currTicketColor);
         let newTicketColorIdx=currTicketColorIdx+1;
         newTicketColorIdx=newTicketColorIdx%colors.length;
         let newTicketColor=colors[newTicketColorIdx];
         ticketcolorStrip.classList.remove(currTicketColor);
         ticketcolorStrip.classList.add(newTicketColor);
+        //local storage update 
         let ticketIdx=getTicketIdx(id);
-        ticketArr[ticketIdx].ticketColor=newTicketColor;
+        ticketArr[ticketIdx].ticketColor = newTicketColor;
         localStorage.setItem("tickets",JASON.stringify(ticketArr));
-    })
+    });
 }
 
+// lock nad unlock to make content editable true or false
+function handalLock(ticket,id){
+     let ticketLOCKELE=ticket.querySelector(".ticket-lock")
+        let ticketlock=ticketLOCKELE.children[0];
+        let ticketTaskARea=ticket.querySelector(".ticket-text");
 
+        // toggle of icons and containeditable propery
+        ticketlock.addEventListener("click",function(){
+            let ticketIDX=getTicketIdx(id);
+            if(ticketlock.classList.contains(lockClass)){
+                ticketlock.classList.remove(lockClass);
+                ticketlock.classList.add(unlockClass);
+                ticketTaskARea.setAttribute("contenteditable","true");
+            }
+            else{
+                ticketlock.classList.remove(unlockClass);
+                ticketlock.classList.add(lockClass);
+                ticketTaskARea.setAttribute("contenteditable","flase");
 
+            }
+            ticketArr[ticketIDX].data=ticketTaskARea.innerText;
+            localStorage.setItem("ticketItem",JASON.stringify(ticketArr));
+        });
+}
